@@ -179,6 +179,9 @@ export function filterAndSortProperties(filters: PropertyFilters): {
     case 'popular':
       data.sort((a, b) => b.accumulatedCallCount - a.accumulatedCallCount);
       break;
+    case 'supply_desc':
+      data.sort((a, b) => b.numberOfSupply - a.numberOfSupply);
+      break;
     default:
       // Default: by accumulatedCallCount desc (popular first)
       data.sort((a, b) => b.accumulatedCallCount - a.accumulatedCallCount);

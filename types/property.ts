@@ -78,7 +78,7 @@ export interface PropertyFilters {
   maxMonthlyRent?: number;
   minArea?: number;
   maxArea?: number;
-  sort?: 'deposit_asc' | 'deposit_desc' | 'rent_asc' | 'rent_desc' | 'area_asc' | 'area_desc' | 'popular';
+  sort?: 'deposit_asc' | 'deposit_desc' | 'rent_asc' | 'rent_desc' | 'area_asc' | 'area_desc' | 'popular' | 'supply_desc';
   page?: number;
   limit?: number;
 }

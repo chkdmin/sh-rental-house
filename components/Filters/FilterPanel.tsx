@@ -212,6 +212,7 @@ export default function FilterPanel({
               <option value="rent_desc">월세 높은순</option>
               <option value="area_asc">면적 작은순</option>
               <option value="area_desc">면적 큰순</option>
+              <option value="supply_desc">공급 많은순</option>
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-500">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
