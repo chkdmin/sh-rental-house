@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="#F3F4F6"/>
+  <path d="M200 80L120 140V220H170V170H230V220H280V140L200 80Z" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="2"/>
+  <rect x="180" y="150" width="40" height="40" rx="2" fill="#9CA3AF"/>
+  <path d="M200 70L110 140" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M200 70L290 140" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+  <text x="200" y="260" text-anchor="middle" font-family="system-ui" font-size="14" fill="#9CA3AF">이미지 없음</text>
+</svg>
