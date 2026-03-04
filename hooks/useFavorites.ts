@@ -2,7 +2,7 @@
 
 import { useCallback, useSyncExternalStore, useMemo } from 'react';
 
-const STORAGE_KEY = 'sh-rentl-house-favorites';
+const STORAGE_KEY = 'sh-rental-house-favorites';
 
 function getStoredFavorites(): string[] {
   if (typeof window === 'undefined') return [];
