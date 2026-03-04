@@ -1,11 +1,13 @@
 'use client';
 
+import { DepositMode, getAdjustedValues } from '@/lib/depositConversion';
 import { Property } from '@/types/property';
 import { useState } from 'react';
 
 interface PropertyDetailModalProps {
   property: Property;
   onClose: () => void;
+  depositMode?: DepositMode;
 }
 
 function formatDeposit(won: number): string {
@@ -32,8 +34,10 @@ function formatDate(dateStr: string | null): string {
   return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
 }
 
-export default function PropertyDetailModal({ property, onClose }: PropertyDetailModalProps) {
+export default function PropertyDetailModal({ property, onClose, depositMode = 'default' }: PropertyDetailModalProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const adjusted = getAdjustedValues(property, depositMode);
+  const isConverted = depositMode !== 'default';
 
   const images = property.buildingImageUrls && property.buildingImageUrls.length > 0
     ? property.buildingImageUrls
@@ -99,16 +103,22 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
           <div className="p-6 space-y-6">
             {/* 가격 정보 */}
             <div className="text-center space-y-2">
+              {isConverted && (
+                <div className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full mb-1">
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                  {depositMode === 'min' ? '최소 보증금' : '최대 보증금'} 전환 적용
+                </div>
+              )}
               <div>
                 <span className="text-sm font-medium text-gray-500 block">보증금</span>
                 <p className="text-4xl font-extrabold text-primary tracking-tight">
-                  {formatDeposit(property.deposit)}<span className="text-xl text-gray-500 font-normal ml-1">원</span>
+                  {formatDeposit(adjusted.deposit)}<span className="text-xl text-gray-500 font-normal ml-1">원</span>
                 </p>
               </div>
               <div>
                 <span className="text-sm font-medium text-gray-500 block">월세</span>
                 <p className="text-2xl font-bold text-secondary">
-                  {formatRent(property.monthlyRent)}<span className="text-lg text-gray-500 font-normal ml-1">원</span>
+                  {formatRent(adjusted.monthlyRent)}<span className="text-lg text-gray-500 font-normal ml-1">원</span>
                 </p>
               </div>
             </div>

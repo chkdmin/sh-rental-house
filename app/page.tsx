@@ -4,6 +4,7 @@ import FilterPanel from '@/components/Filters/FilterPanel';
 import PropertyDetailModal from '@/components/PropertyDetail/PropertyDetailModal';
 import PropertyList from '@/components/PropertyList/PropertyList';
 import { useFavorites } from '@/hooks/useFavorites';
+import { DepositMode } from '@/lib/depositConversion';
 import { FilterOptions, Property, PropertyFilters, PropertyListResponse } from '@/types/property';
 import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -36,6 +37,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'list' | 'map'>('list');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [depositMode, setDepositMode] = useState<DepositMode>('default');
 
   const { favorites, isFavorite, toggleFavorite, count: favoritesCount } = useFavorites();
 
@@ -251,13 +253,13 @@ export default function Home() {
       <div className="flex-1 flex overflow-hidden relative">
         {/* 좌측: 필터 (데스크탑) */}
         <div className="hidden lg:flex flex-col w-[320px] shrink-0 border-r border-gray-200 bg-white z-10">
-          <FilterPanel filterOptions={filterOptions} filters={filters} onFiltersChange={handleFiltersChange} onFavoritesToggle={handleFavoritesToggle} showFavoritesOnly={showFavoritesOnly} favoritesCount={favoritesCount} />
+          <FilterPanel filterOptions={filterOptions} filters={filters} onFiltersChange={handleFiltersChange} onFavoritesToggle={handleFavoritesToggle} showFavoritesOnly={showFavoritesOnly} favoritesCount={favoritesCount} depositMode={depositMode} onDepositModeChange={setDepositMode} />
         </div>
 
         {/* 모바일 필터 오버레이 */}
         {isFilterOpen && (
           <div className="lg:hidden absolute inset-0 z-30 bg-white">
-            <FilterPanel filterOptions={filterOptions} filters={filters} onFiltersChange={handleFiltersChange} onFavoritesToggle={handleFavoritesToggle} showFavoritesOnly={showFavoritesOnly} favoritesCount={favoritesCount} />
+            <FilterPanel filterOptions={filterOptions} filters={filters} onFiltersChange={handleFiltersChange} onFavoritesToggle={handleFavoritesToggle} showFavoritesOnly={showFavoritesOnly} favoritesCount={favoritesCount} depositMode={depositMode} onDepositModeChange={setDepositMode} />
             <button onClick={() => setIsFilterOpen(false)} className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-2 rounded-full shadow-lg text-sm font-medium">
               필터 닫기
             </button>
@@ -281,6 +283,7 @@ export default function Home() {
             onFavoriteToggle={toggleFavorite}
             onPropertyClick={handlePropertyClick}
             onMapClick={handleMapClick}
+            depositMode={depositMode}
           />
         </div>
 
@@ -292,6 +295,7 @@ export default function Home() {
             onPropertySelect={handlePropertyClick}
             className="w-full h-full"
             isVisible={activeTab === 'map'}
+            depositMode={depositMode}
           />
           <div className="absolute top-4 left-4 z-[1] bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg border border-white/50 hidden md:block">
             <p className="text-xs font-medium text-gray-500">지도에서 매물을 클릭하여 상세정보를 확인하세요</p>
@@ -301,7 +305,7 @@ export default function Home() {
 
       {/* 상세 모달 */}
       {selectedProperty && (
-        <PropertyDetailModal property={selectedProperty} onClose={() => setSelectedProperty(null)} />
+        <PropertyDetailModal property={selectedProperty} onClose={() => setSelectedProperty(null)} depositMode={depositMode} />
       )}
     </div>
   );

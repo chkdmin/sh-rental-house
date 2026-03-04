@@ -1,5 +1,6 @@
 'use client';
 
+import { DepositMode } from '@/lib/depositConversion';
 import { FilterOptions, PropertyFilters } from '@/types/property';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -10,6 +11,8 @@ interface FilterPanelProps {
   onFavoritesToggle?: () => void;
   showFavoritesOnly?: boolean;
   favoritesCount?: number;
+  depositMode?: DepositMode;
+  onDepositModeChange?: (mode: DepositMode) => void;
 }
 
 export default function FilterPanel({
@@ -19,6 +22,8 @@ export default function FilterPanel({
   onFavoritesToggle,
   showFavoritesOnly = false,
   favoritesCount = 0,
+  depositMode = 'default',
+  onDepositModeChange,
 }: FilterPanelProps) {
   const [localFilters, setLocalFilters] = useState<PropertyFilters>(filters);
 
@@ -192,6 +197,52 @@ export default function FilterPanel({
                   </button>
                 </span>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* 보증금 전환 설정 */}
+        {onDepositModeChange && (
+          <div className="space-y-3">
+            <label className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+              보증금/월세 전환
+            </label>
+            <p className="text-xs text-gray-500 -mt-1">보증금을 높이면 월세가 낮아지고, 보증금을 낮추면 월세가 높아집니다.</p>
+            <div className="grid grid-cols-3 gap-1.5">
+              <button
+                onClick={() => onDepositModeChange('min')}
+                className={`py-2.5 px-2 rounded-xl text-xs font-medium transition-all border text-center ${
+                  depositMode === 'min'
+                    ? 'bg-green-50 text-green-700 border-green-300 shadow-sm'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="font-bold">최소 보증금</div>
+                <div className="text-[10px] mt-0.5 opacity-70">월세↑</div>
+              </button>
+              <button
+                onClick={() => onDepositModeChange('default')}
+                className={`py-2.5 px-2 rounded-xl text-xs font-medium transition-all border text-center ${
+                  depositMode === 'default'
+                    ? 'bg-primary/10 text-primary border-primary/30 shadow-sm'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="font-bold">기본</div>
+                <div className="text-[10px] mt-0.5 opacity-70">공고 기준</div>
+              </button>
+              <button
+                onClick={() => onDepositModeChange('max')}
+                className={`py-2.5 px-2 rounded-xl text-xs font-medium transition-all border text-center ${
+                  depositMode === 'max'
+                    ? 'bg-blue-50 text-blue-700 border-blue-300 shadow-sm'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="font-bold">최대 보증금</div>
+                <div className="text-[10px] mt-0.5 opacity-70">월세↓</div>
+              </button>
             </div>
           </div>
         )}

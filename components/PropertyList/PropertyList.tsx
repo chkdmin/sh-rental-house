@@ -1,6 +1,7 @@
 'use client';
 
 import PropertyCard from '@/components/PropertyCard/PropertyCard';
+import { DepositMode } from '@/lib/depositConversion';
 import { Property } from '@/types/property';
 
 interface PropertyListProps {
@@ -14,6 +15,7 @@ interface PropertyListProps {
   onFavoriteToggle: (id: string) => void;
   onPropertyClick: (property: Property) => void;
   onMapClick?: (property: Property) => void;
+  depositMode?: DepositMode;
 }
 
 function PropertyCardSkeleton() {
@@ -40,6 +42,7 @@ export default function PropertyList({
   onFavoriteToggle,
   onPropertyClick,
   onMapClick,
+  depositMode = 'default',
 }: PropertyListProps) {
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
@@ -118,6 +121,7 @@ export default function PropertyList({
               onFavoriteToggle={onFavoriteToggle}
               onClick={() => onPropertyClick(property)}
               onMapClick={onMapClick ? () => onMapClick(property) : undefined}
+              depositMode={depositMode}
             />
           ))}
         </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { DepositMode, getAdjustedValues } from '@/lib/depositConversion';
 import { loadKakaoMapScript } from '@/lib/kakaoMap';
 import { Property } from '@/types/property';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -23,6 +24,7 @@ interface KakaoMapProps {
   onPropertySelect?: (property: Property) => void;
   className?: string;
   isVisible?: boolean;
+  depositMode?: DepositMode;
 }
 
 function formatDeposit(won: number): string {
@@ -47,6 +49,7 @@ export default function KakaoMap({
   onPropertySelect,
   className = '',
   isVisible = true,
+  depositMode = 'default',
 }: KakaoMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<kakao.maps.Map | null>(null);
@@ -140,15 +143,15 @@ export default function KakaoMap({
       <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px;">
         <div>
           <span style="font-size:12px;color:#6b7280;">보증금</span>
-          <div style="font-weight:800;font-size:20px;color:#0F4C5C;">${formatDeposit(property.deposit)}<span style="font-size:13px;font-weight:normal;color:#6b7280;">원</span></div>
+          <div style="font-weight:800;font-size:20px;color:#0F4C5C;">${formatDeposit(getAdjustedValues(property, depositMode).deposit)}<span style="font-size:13px;font-weight:normal;color:#6b7280;">원</span></div>
         </div>
         <div style="text-align:right;">
           <span style="font-size:12px;color:#6b7280;">월세</span>
-          <div style="font-weight:700;font-size:17px;color:#E36414;">${formatRent(property.monthlyRent)}<span style="font-size:13px;font-weight:normal;color:#6b7280;">원</span></div>
+          <div style="font-weight:700;font-size:17px;color:#E36414;">${formatRent(getAdjustedValues(property, depositMode).monthlyRent)}<span style="font-size:13px;font-weight:normal;color:#6b7280;">원</span></div>
         </div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid #f3f4f6;">
-        <span style="font-size:13px;color:#6b7280;">${property.exclusiveArea.toFixed(1)}m2 / ${property.buildingType}</span>
+        <span style="font-size:13px;color:#6b7280;">${property.exclusiveArea.toFixed(1)}m2 / ${property.buildingType} / ${property.numberOfSupply}세대</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
       </div>
       <div style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:8px solid white;filter:drop-shadow(0 2px 1px rgba(0,0,0,0.05));"></div>
@@ -163,7 +166,7 @@ export default function KakaoMap({
     });
 
     return { marker, customOverlay, property };
-  }, [onPropertySelect]);
+  }, [onPropertySelect, depositMode]);
 
   // 그룹 마커 생성
   const createGroupMarker = useCallback((coordKey: string, groupProperties: Property[]): GroupedMarkerData | null => {
@@ -205,8 +208,8 @@ export default function KakaoMap({
       item.innerHTML = `
         <div style="font-weight:600;font-size:14px;color:#111827;margin-bottom:4px;">${property.danjiName}</div>
         <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-weight:700;font-size:15px;color:#0F4C5C;">${formatDeposit(property.deposit)}원</span>
-          <span style="font-size:14px;color:#E36414;font-weight:600;">${formatRent(property.monthlyRent)}원</span>
+          <span style="font-weight:700;font-size:15px;color:#0F4C5C;">${formatDeposit(getAdjustedValues(property, depositMode).deposit)}원</span>
+          <span style="font-size:14px;color:#E36414;font-weight:600;">${formatRent(getAdjustedValues(property, depositMode).monthlyRent)}원</span>
         </div>
         <div style="font-size:12px;color:#6b7280;margin-top:2px;">${property.exclusiveArea.toFixed(1)}m2 / ${property.buildingType}</div>
       `;
@@ -226,7 +229,7 @@ export default function KakaoMap({
     });
 
     return { marker, customOverlay, properties: groupProperties, coordKey };
-  }, [onPropertySelect]);
+  }, [onPropertySelect, depositMode]);
 
   // 마커 업데이트
   useEffect(() => {

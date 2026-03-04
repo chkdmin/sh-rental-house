@@ -1,5 +1,6 @@
 'use client';
 
+import { DepositMode, getAdjustedValues } from '@/lib/depositConversion';
 import { Property } from '@/types/property';
 
 interface PropertyCardProps {
@@ -8,6 +9,7 @@ interface PropertyCardProps {
   onFavoriteToggle: (id: string) => void;
   onClick: () => void;
   onMapClick?: () => void;
+  depositMode?: DepositMode;
 }
 
 function formatDeposit(won: number): string {
@@ -34,7 +36,11 @@ export default function PropertyCard({
   onFavoriteToggle,
   onClick,
   onMapClick,
+  depositMode = 'default',
 }: PropertyCardProps) {
+  const adjusted = getAdjustedValues(property, depositMode);
+  const isConverted = depositMode !== 'default';
+
   const thumbnailUrl = property.buildingImageUrls && property.buildingImageUrls.length > 0
     ? property.buildingImageUrls[0]
     : '/placeholder-house.svg';
@@ -106,15 +112,15 @@ export default function PropertyCard({
         {/* 가격 */}
         <div className="mb-4 space-y-1">
           <div>
-            <span className="text-xs text-gray-500">보증금</span>
+            <span className="text-xs text-gray-500">보증금{isConverted && <span className="text-primary ml-1">(전환)</span>}</span>
             <p className="text-xl font-extrabold text-primary">
-              {formatDeposit(property.deposit)}<span className="text-sm font-normal text-gray-500 ml-1">원</span>
+              {formatDeposit(adjusted.deposit)}<span className="text-sm font-normal text-gray-500 ml-1">원</span>
             </p>
           </div>
           <div>
-            <span className="text-xs text-gray-500">월세</span>
+            <span className="text-xs text-gray-500">월세{isConverted && <span className="text-primary ml-1">(전환)</span>}</span>
             <p className="text-lg font-bold text-secondary">
-              {formatRent(property.monthlyRent)}<span className="text-sm font-normal text-gray-500 ml-1">원</span>
+              {formatRent(adjusted.monthlyRent)}<span className="text-sm font-normal text-gray-500 ml-1">원</span>
             </p>
           </div>
         </div>

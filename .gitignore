@@ -43,3 +43,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+*.pdf
+docs/
+sh-2026-1st-maeipimdae-subjects.json
